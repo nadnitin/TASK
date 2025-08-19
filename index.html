@@ -99,12 +99,13 @@
   <!-- ---------- TASKS ---------- -->
   <div id="task-section">
     <div class="filter-bar">
-      <select id="statusFilter" onchange="renderTasks()">
-        <option value="all">All</option>
-        <option value="completed">Completed</option>
-        <option value="pending">Pending</option>
-        <option value="onhold">On Hold</option>
-      </select>
+    <select id="statusFilter" onchange="renderTasks(allTasks)">
+  <option value="all">All</option>
+  <option value="completed">Completed</option>
+  <option value="pending">Pending</option>
+  <option value="onhold">On Hold</option>
+</select>
+
       <button onclick="downloadExcel()">⬇ Download Excel</button>
     </div>
 
@@ -272,13 +273,13 @@
     }
 
     // ---------- RENDER TASKS ----------
-function renderTasks(tasks = []) {
+function renderTasks(tasks = allTasks) {
   const statusFilter = document.getElementById("statusFilter").value;
   const taskList = document.getElementById("task-list");
   taskList.innerHTML = "";
 
   tasks.filter(task =>
-    statusFilter === "all" || task.status === statusFilter
+    statusFilter === "all" || task.status.toLowerCase() === statusFilter.toLowerCase()
   ).forEach(task => {
     const card = document.createElement("div");
     card.className = "task-card";
@@ -303,7 +304,6 @@ function renderTasks(tasks = []) {
           '${task.status}',
           '${task.completed_date || ""}'
         )">Edit</button>
-        <button class="delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
       </div>
     `;
     taskList.appendChild(card);
